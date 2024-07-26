@@ -86,4 +86,17 @@ class UserController extends Controller
 
         return (new UserResource($user, "success", 200, "User data updated successfully"))->response();
     }
+
+    public function logout(Request $request): JsonResponse
+    {
+        $user = Auth::user();
+        $user->token = null;
+        $user->save();
+
+        return response()->json([
+            "status" => "success",
+            "code" => 200,
+            "message" => "User logged out successfully",
+        ])->setStatusCode(200);
+    }
 }

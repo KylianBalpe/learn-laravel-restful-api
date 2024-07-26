@@ -240,7 +240,7 @@
                 }
             }
         },
-        "/api/user/current" : {
+        "/api/user/profile" : {
             "get" : {
                 "description": "Get current user",
                 "parameters": [
