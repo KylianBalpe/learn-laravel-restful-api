@@ -29,4 +29,5 @@ Route::middleware(ApiAuthMiddleware::class)->group(function () {
     Route::get("/contact/{id}", [ContactController::class, "get"])->where("id", "[0-9]+");
     Route::put("/contact/{id}", [ContactController::class, "update"])->where("id", "[0-9]+");
     Route::delete("/contact/{id}", [ContactController::class, "delete"])->where("id", "[0-9]+");
+    Route::get("/contacts", [ContactController::class, "search"]);
 });
