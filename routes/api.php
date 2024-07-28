@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AddressController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\ApiAuthMiddleware;
@@ -30,4 +31,6 @@ Route::middleware(ApiAuthMiddleware::class)->group(function () {
     Route::put("/contact/{id}", [ContactController::class, "update"])->where("id", "[0-9]+");
     Route::delete("/contact/{id}", [ContactController::class, "delete"])->where("id", "[0-9]+");
     Route::get("/contacts", [ContactController::class, "search"]);
+
+    Route::post("/contact/{idContact}/address", [AddressController::class, "create"])->where("idContact", "[0-9]+");
 });
