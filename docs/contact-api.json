@@ -52,7 +52,7 @@
                     }
                 },
                 "responses": {
-                    "200": {
+                    "201": {
                         "description": "Contact created",
                         "content": {
                             "application/json": {
