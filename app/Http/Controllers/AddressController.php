@@ -103,4 +103,19 @@ class AddressController extends Controller
             "data" => new AddressResource($address),
         ])->setStatusCode(200);
     }
+
+    public function delete(int $idContact, int $idAddress): JsonResponse
+    {
+        $user = Auth::user();
+        $contact = $this->getContact($user, $idContact);
+        $address = $this->getAddress($contact->id, $idAddress);
+
+        $address->delete();
+
+        return response()->json([
+            "status" => "success",
+            "code" => 200,
+            "message" => "Address deleted successfully",
+        ])->setStatusCode(200);
+    }
 }
