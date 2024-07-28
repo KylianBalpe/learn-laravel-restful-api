@@ -118,4 +118,19 @@ class AddressController extends Controller
             "message" => "Address deleted successfully",
         ])->setStatusCode(200);
     }
+
+    public function list(int $idContact): JsonResponse
+    {
+        $user = Auth::user();
+        $contact = $this->getContact($user, $idContact);
+
+        $addresses = Address::where("contact_id", $contact->id)->get();
+
+        return response()->json([
+            "status" => "success",
+            "code" => 200,
+            "message" => "Addresses retrieved successfully",
+            "data" => AddressResource::collection($addresses),
+        ])->setStatusCode(200);
+    }
 }
