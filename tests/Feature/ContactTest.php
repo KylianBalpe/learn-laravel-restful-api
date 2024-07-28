@@ -48,7 +48,7 @@ class ContactTest extends TestCase
             ]);
     }
 
-    public function testCreateContactFailed(): void
+    public function testCreateContactValidationError(): void
     {
         $this->seed(UserSeeder::class);
         $this->post("/api/contact",
@@ -173,5 +173,65 @@ class ContactTest extends TestCase
             ]);
     }
 
+    public function testUpdateContactSuccess(): void
+    {
+        $this->seed([UserSeeder::class, ContactSeeder::class]);
+        $contact = Contact::query()->limit(1)->first();
+        $oldContact = Contact::where("id", $contact->id)->first();
 
+        $this->put("/api/contact/" . $contact->id,
+            [
+                "firstName" => "Pamula",
+                "lastName" => "Pamula",
+                "email" => "iqbal@example.com",
+                "phone" => "081234567890"
+            ],
+            [
+                "Authorization" => "test-token"
+            ])->assertStatus(200)
+            ->assertJson([
+                "status" => "success",
+                "code" => 200,
+                "message" => "Contact updated successfully",
+                "data" => [
+                    "firstName" => "Pamula",
+                    "lastName" => "Pamula",
+                    "email" => "iqbal@example.com",
+                    "phone" => "081234567890"
+                ]
+            ]);
+
+        $newContact = Contact::where("id", $contact->id)->first();
+        self::assertNotEquals($oldContact->firstName, $newContact->firstName);
+    }
+
+    public function testUpdateContactValidationError(): void
+    {
+        $this->seed([UserSeeder::class, ContactSeeder::class]);
+        $contact = Contact::query()->limit(1)->first();
+
+        $this->put("/api/contact/" . $contact->id,
+            [
+                "firstName" => "",
+                "lastName" => "Pamula",
+                "email" => "iqbal",
+                "phone" => "081234567890"
+            ],
+            [
+                "Authorization" => "test-token"
+            ])->assertStatus(422)
+            ->assertJson([
+                "status" => "error",
+                "code" => 422,
+                "message" => "Validation error",
+                "errors" => [
+                    "firstName" => [
+                        "The first name field is required."
+                    ],
+                    "email" => [
+                        "The email field must be a valid email address."
+                    ]
+                ]
+            ]);
+    }
 }
